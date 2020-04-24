@@ -174,7 +174,8 @@ My final model results were:
 
 After submitting the work, I put the image balancer and image generator back to see how far I can get with the fully tuned neural network and these tools (see https://github.com/esp32wrangler/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier_with_augmentation.ipynb). Suprisingly, the results on the Test dataset were worse, not better. I was hoping that the results on my Hungarian dataset would at least improve, but that got worse as well. Perhaps with better tuning of the image generator variables I could get better results, which is an excercise for the future.
 
-I also started researching more modern architectures targeted specifically to sign recognition, and found some promising candidates, but did not have a chance yet to experiment with them yet.
+I also started researching more modern architectures targeted specifically to sign recognition, and found some promising candidates, such as the paper "Trafﬁc-Sign Detection and Classiﬁcation Under
+Challenging Conditions: A Deep Neural Network Based Approach" from Uday Kamal and his team, and tried to implement it as LeNetUday, but it did not work at all out of the door, and I not have a chance yet to try to figure out the bugs yet...
 
 According to this table: http://benchmark.ini.rub.de/?section=gtsrb&subsection=results&subsubsection=ijcnn , human performance is around 98.8% on this type of data. So there is still a lot of room to improve to reach that, but I'm already very impressed with the relative ease and speed I was able to develop such a decent recognizer. If I were to attempt to write a manual algorithm similar to the lane follower example earlier in the course, it would have taken a lot longer, and would have probably yielded worse (albeit much more predictably bad) results.
 
