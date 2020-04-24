@@ -175,14 +175,37 @@ My final model results were:
 * validation set accuracy of 95% 
 * test set accuracy of 94%
 
-After submitting the work, I put the image balancer and image generator back to see how far I can get with the fully tuned neural network and these tools (see https://github.com/esp32wrangler/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier_with_augmentation.ipynb). Suprisingly, the results on the Test dataset were worse, not better. I was hoping that the results on my Hungarian dataset would at least improve, but that got worse as well. Perhaps with better tuning of the image generator variables I could get better results, which is an excercise for the future.
-
-I also started researching more modern architectures targeted specifically to sign recognition, and found some promising candidates, such as the paper "Trafﬁc-Sign Detection and Classiﬁcation Under
-Challenging Conditions: A Deep Neural Network Based Approach" from Uday Kamal and his team, and tried to implement it as LeNetUday, but it did not work at all out of the door, and I not have a chance yet to try to figure out the bugs yet...
+After submitting the work, I put the image balancer and image generator back to see how far I can get with the fully tuned neural network and these tools (see https://github.com/esp32wrangler/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier_with_augmentation.ipynb). Suprisingly, the results on the Test dataset were worse, not better. I was hoping that the results on my Hungarian dataset would at least improve, but that got worse as well. 
 
 According to this table: http://benchmark.ini.rub.de/?section=gtsrb&subsection=results&subsubsection=ijcnn , human performance is around 98.8% on this type of data. So there is still a lot of room to improve to reach that, but I'm already very impressed with the relative ease and speed I was able to develop such a decent recognizer. If I were to attempt to write a manual algorithm similar to the lane follower example earlier in the course, it would have taken a lot longer, and would have probably yielded worse (albeit much more predictably bad) results.
 
-I plan to look at more modern architectures and play with them to get closer to the human accuracy.
+The reviewer suggested looking at the paper "Multi-Column Deep Neural Network for Traffic Sign Classification" by Jürgen Schmidhuber and his team. I immediately realized that I was doing the image generation wrong, it cannot be done up-ahead, but has to be done epoch-by-epoch to have real value. I added in the batch-by-batch image distortion and the accuracy leapfrogged to as high as 96% on the validation dataset and 95% on the test dataset (it still failed to correctly classify all images in my Hungarian dataset though - and on each run a different sign was misclassified).
+
+Finally I implemented the architecture suggested by the Schmidhuber paper. I trained 5 separate columns, with different image generation settings:
+
+1. relatively large shift, zoom and rotate parameters combined with gaussian noise
+2. middle parameters without noise
+3. low parameters
+4. low parameters combined with greyscale conversion 
+5. no change to the images
+
+ I then used a sum(softmax(columns)) approach to add the results of each colum results together. After 10 epochs of training I got the following typical results on the Test dataset:
+
+```
+Test Accuracy (column 1) = 0.951
+Test Accuracy (column 2)  = 0.962
+Test Accuracy (column 3)  = 0.952
+Test Accuracy (column 4)  = 0.944
+Test Accuracy (column 5)  = 0.946
+All channel accuracy = 0.973
+```
+
+(The accuracy on the validation dataset was about 1% higher across the board, combining to 98.3%).
+
+I suspect these are the reasons my results are worse than the 99% in the paper:
+- My GPU was just barely sufficient to train this network, so I didn't tune the hyperparameters at all
+- I did not apply any pre-processing to the images aside from scaling (the paper suggests a range of contrast equalizations)
+- The keras image generator I used is rather limited in its feature set, more variety in the images (including affine and perspective distortions, as well as color and contrast variations) would be helpful
 
 ### Test a Model on New Images
 
