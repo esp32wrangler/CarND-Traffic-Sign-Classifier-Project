@@ -80,10 +80,16 @@ I experimented with different normalizations for the images:
 - a simple "-128/128" normalization to map the pixels to the [-1..1] range
 - an even simpler "/255" normalization to the [0..1] range (results seemed about the same as the [-1..1] normalization)
 - converting the images to greyscale (with 1 or 3 channels)
+   - the 1 channel approach would have allowed me to use the LeNet architecture without change (for the channel 1 case), but I think color is very important in traffic sign recognition, so I didn't feel this was the right way to go
+   - the 3 channel greyscale would have given some resistance to the network against changes in hue and saturation of the input, which it did, but not to a level to justify the drastically increased training time
 - boosting the color saturation with conversion to HSV color space, multiplying the saturation value and then converting back to RGB
+    - my hope was that this would help the recognizer spot the colors easier, but it didn't seem to matter
 - converting to HLS and HSV color spaces and feeding that to the network
+    - this worked well for the lane recognition, but ultimately it is a linear transformation that the network was able to discover on its own
 - "stretching" the image over the entire [-1..1] range, increasing contrast as needed
+    - this didn't actually add any information to the image that was there already, and it actually made the results worse
 - adding gaussian noise
+    - my hope was that this would add some more randomness and help prevent overtraining, but the regularization and dropouts helped more
 
 Because of the unbalanced dataset, I added a simple algorithm to add new, distorted (rotated, perspective distorted, affine transformed) version of the images in the underrepresented classes. This, unfortunately did not yield a noticeable positive impact. I also tried a more sophisticated approach using the keras ImageGenerator and the imbalanced-learn library, but I couldn't find the right parameters for this to have a significant impact on the results, so I abandoned this approach.
 
