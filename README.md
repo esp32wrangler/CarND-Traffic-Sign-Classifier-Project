@@ -41,6 +41,9 @@ The goals / steps of this project are the following:
 
 [image22]: ./writeup_images/end_of_no_passing.png "Featuremaps"
 
+[image23]: ./writeup_images/hist_valid.png "Featuremaps"
+[image24]: ./writeup_images/hist_test.png "Featuremaps"
+
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -209,6 +212,11 @@ The model was able to correctly guess 7 of the 8 traffic signs, which gives an a
 
 The weakness of the original dataset clearly shows, both the miss of the "No passing" sign and the near-miss of the 20 km/h sign are related to the two most under-represented classes in the dataset, the 20 km/h sign with only 180 examples, and the "End of no passing" sign with 210. Even though on average the model is pretty good, it is clearly not reliable when it comes to these particular signs (and they are also underrepresented in the validation and test datasets, supporting a false trust in the model in light of the validation and test results). With a curated, carefully balanced test dataset, a better understanding could be achieved of the quality of the model.
 
+Both validation and test datasets are unbalanced, meaning that simple recognition percentage tests done on them will not give a true idea about the real-world accuracy of the model (unless the real world signs are also identically unbalanced):
+
+![image23] ![image24]
+
+
 In addition to the above, the model also had some doubts about the Stop sign, which is more surprising and harder to explain with my level of knowledge.
 
 For the others, the softmax values show a very strong peak (or a single point), indicating that the model is certain or near certain about what signs they are.
@@ -240,12 +248,12 @@ On the conv2 layer however, the cross hashing is extremely prominent on most of 
 
 
 ![image12]
-![image22]:
+![image22]
 
 ![image15]
-![image20]:
+![image20]
 ![image16]
-![image21]: 
+![image21] 
 
 
 
@@ -255,3 +263,4 @@ I also found an image for a roadworks sign (from a Lego set, to keep things inte
 ![image18]
 
 I can't really see the similarity...
+
